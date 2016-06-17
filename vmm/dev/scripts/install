@@ -161,6 +161,16 @@ function removeAgent {
 
    #Disable waagent daemon
    WriteLog "Disabling waagent daemon"
+   #SystemD
+   if [ -x /bin/systemctl  -o -x /usr/bin/systemctl ]
+   then
+	if [ `systemctl is-enabled walinuxagent 2>/dev/null|grep enabled|wc -l` -eq 1 ]
+	then
+		systemctl disable walinuxagent
+		systemctl stop walinuxagent
+	fi
+   fi
+
    if [ -x /sbin/insserv ]
    then
 	/sbin/insserv -r waagent
